@@ -1,0 +1,22 @@
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: primewave-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: primewave
+      POSTGRES_USER: primewave
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.local}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U primewave -d primewave"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
